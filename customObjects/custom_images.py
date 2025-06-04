@@ -1,5 +1,5 @@
 import pygame
-import math as Lolus
+import math
 
 
 class Custom_image:  # A class to easier render images
@@ -40,7 +40,7 @@ class Custom_image:  # A class to easier render images
     def rotate_toward(self, pos):
         rel_x, rel_y = pos[0] - self.x, pos[1] - self.y
 
-        angle = Lolus.degrees(Lolus.atan2(-rel_y, rel_x)) - 90
+        angle = math.degrees(math.atan2(-rel_y, rel_x)) - 90
 
         self.image = pygame.transform.rotate(self.original_image, angle)
 
