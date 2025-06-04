@@ -2,20 +2,6 @@ import pygame
 from app import config, display
 from customObjects import custom_text, custom_images, custom_button
 
-# Copyight (C) 2025  Hohenzoler
-# #
-# # This program is free software; you can redistribute it and/or modify
-# # it under the terms of the GNU General Public License as published by
-# # the Free Software Foundation; version 2 of the License.
-# #
-# # This program is distributed in the hope that it will be useful,
-# # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# # GNU General Public License for more details.
-# #
-# # You should have received a copy of the GNU General Public License along
-# # with this program; if not, write to the Free Software Foundation, Inc.,
-# # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.r
 class Game:
     def __init__(self):
         pygame.init()
@@ -31,8 +17,6 @@ class Game:
         self.title = self.cfg['title']
         self.fullscreen = int(self.cfg['full-screen'])
         self.enable_debug = int(self.cfg['enable_debug'])
-
-        print(f'PYGAME-STARTING-PROJECT, Copyright (C) 2024 Hohenzoler\nPYGAME-STARTING-PROJECT comes with ABSOLUTELY NO WARRANTY\nThis is free software, and you are welcome to redistribute it under certain conditions; Go to License.md for more info.')
 
         self.objects_in_memory = 0
         self.clock = pygame.time.Clock()
