@@ -36,8 +36,11 @@ class Button:  # A button class
             pygame.draw.rect(self.display.screen, self.outline_color, self.rect, self.outline_width, border_radius=10)
 
     def events(self, event):  # Checks events
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.rect.collidepoint(event.pos):  # Checks if the button has been pressed
-            print('No action assigned to this button')
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.rect.collidepoint(event.pos):
+            if callable(self.action):
+                self.action()
+            else:
+                print('No valid action assigned to this button')
 
     def delete(self):
         self.text.delete()
