@@ -33,9 +33,12 @@ class Game:
             pygame.display.toggle_fullscreen()
         pygame.display.set_caption(f"{self.title} (v {self.version})")
 
-
-        self.displays = {'template_display': display.basic_display(self), 'game_display': display.game_display(self)}
-        self.current_display = self.displays['game_display']
+        self.displays = {
+            'template_display': display.basic_display(self),
+            'game_display': display.game_display(self),
+            'main_menu': display.main_menu_display(self)
+        }
+        self.current_display = self.displays['main_menu']
 
         self.pointing_at = []
 
