@@ -105,6 +105,5 @@ class Game:
             self.debug_items[5].update_text(f'Current display: {type(self.current_display)}')
 
 
-        pygame.display.update()
         pygame.display.flip()
 
