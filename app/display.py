@@ -1,6 +1,8 @@
 from customObjects import custom_images, custom_text, custom_button
 from particlesystem import particle_system, particle_generator
 import random
+import pygame
+import configparser
 
 class basic_display:
     def __init__(self, game):
@@ -103,7 +105,7 @@ class main_menu_display(basic_display):
         self.game.change_display('game_display')
 
     def open_options(self):
-        print("Options menu (not implemented)")
+        self.game.change_display('options_display')
 
     def exit_game(self):
         self.game.run = False
@@ -119,3 +121,227 @@ class main_menu_display(basic_display):
         self.particle_gen.edit(x=random.randint(0, self.game.width), y=random.randint(0, self.game.height), dvx=(random.uniform(-0.1, 0.1)), dvy=(random.uniform(-0.1, 0.1)), vx=random.uniform(-1, 1), vy=random.uniform(-1, 1), red=random.randint(0, 255), green=random.randint(0, 255), blue=random.randint(0, 255))
         self.particle_system.update(self.game.delta_time)
 
+
+class options_display(basic_display):
+    def __init__(self, game):
+        basic_display.__init__(self, game)
+
+        self.game = game
+        self.title = custom_text.Custom_text(
+            self,
+            game.width / 2,
+            game.height / 10,
+            "Options",
+            text_color='white',
+            font_height=60
+        )
+
+        # Get available resolutions
+        self.available_resolutions = pygame.display.list_modes()
+        # Filter to common resolutions for better usability
+        self.common_resolutions = [(1280, 720), (1366, 768), (1600, 900), (1920, 1080)]
+        self.resolution_options = [res for res in self.common_resolutions if res in self.available_resolutions]
+        if not self.resolution_options:  # If no common resolutions found, use some from available ones
+            self.resolution_options = self.available_resolutions[:5]
+
+        # Add current resolution if not in list
+        current_res = (self.game.width, self.game.height)
+        if current_res not in self.resolution_options:
+            self.resolution_options.append(current_res)
+
+        # Sort resolutions by size
+        self.resolution_options.sort(key=lambda x: x[0] * x[1])
+
+        # Find index of current resolution
+        self.current_res_index = self.resolution_options.index(current_res)
+
+        # Available FPS options
+        self.fps_options = [30, 60, 90, 120, 144, 240]
+        self.current_fps = float(self.game.fps)
+
+        # Find closest FPS option to current setting
+        self.current_fps_index = min(range(len(self.fps_options)),
+                                     key=lambda i: abs(self.fps_options[i] - self.current_fps))
+
+        # Create UI elements
+        button_width = 200
+        button_height = 50
+
+        # Resolution section
+        self.resolution_text = custom_text.Custom_text(
+            self,
+            game.width / 2,
+            game.height / 3,
+            f"Resolution: {self.resolution_options[self.current_res_index][0]}x{self.resolution_options[self.current_res_index][1]}",
+            text_color='white',
+            font_height=30
+        )
+
+        self.res_left_button = custom_button.Button(
+            self,
+            self.prev_resolution,
+            game.width / 2 - button_width - 20,
+            game.height / 3 + 50,
+            50,
+            button_height,
+            color=(80, 80, 180),
+            text="<",
+            text_color="white"
+        )
+
+        self.res_right_button = custom_button.Button(
+            self,
+            self.next_resolution,
+            game.width / 2 + button_width - 30,
+            game.height / 3 + 50,
+            50,
+            button_height,
+            color=(80, 80, 180),
+            text=">",
+            text_color="white"
+        )
+
+        # FPS section
+        self.fps_text = custom_text.Custom_text(
+            self,
+            game.width / 2,
+            game.height / 2,
+            f"FPS: {self.fps_options[self.current_fps_index]}",
+            text_color='white',
+            font_height=30
+        )
+
+        self.fps_left_button = custom_button.Button(
+            self,
+            self.prev_fps,
+            game.width / 2 - button_width - 20,
+            game.height / 2 + 50,
+            50,
+            button_height,
+            color=(80, 80, 180),
+            text="<",
+            text_color="white"
+        )
+
+        self.fps_right_button = custom_button.Button(
+            self,
+            self.next_fps,
+            game.width / 2 + button_width - 30,
+            game.height / 2 + 50,
+            50,
+            button_height,
+            color=(80, 80, 180),
+            text=">",
+            text_color="white"
+        )
+
+        # Apply button
+        self.apply_button = custom_button.Button(
+            self,
+            self.apply_settings,
+            game.width / 2 - button_width / 2,
+            game.height * 3 / 4,
+            button_width,
+            button_height,
+            color=(100, 200, 100),
+            text="Apply",
+            text_color="white"
+        )
+
+        # Back button
+        self.back_button = custom_button.Button(
+            self,
+            self.go_back,
+            game.width / 2 - button_width / 2,
+            game.height * 3 / 4 + 70,
+            button_width,
+            button_height,
+            color=(200, 100, 100),
+            text="Back",
+            text_color="white"
+        )
+
+        self.restart_notice = None
+        self.notice_timer = 0
+        self.notice_visible = False
+
+    def prev_resolution(self):
+        self.current_res_index = (self.current_res_index - 1) % len(self.resolution_options)
+        self.update_resolution_text()
+
+    def next_resolution(self):
+        self.current_res_index = (self.current_res_index + 1) % len(self.resolution_options)
+        self.update_resolution_text()
+
+    def update_resolution_text(self):
+        res = self.resolution_options[self.current_res_index]
+        self.resolution_text.update_text(f"Resolution: {res[0]}x{res[1]}")
+
+    def prev_fps(self):
+        self.current_fps_index = (self.current_fps_index - 1) % len(self.fps_options)
+        self.update_fps_text()
+
+    def next_fps(self):
+        self.current_fps_index = (self.current_fps_index + 1) % len(self.fps_options)
+        self.update_fps_text()
+
+    def update_fps_text(self):
+        self.fps_text.update_text(f"FPS: {self.fps_options[self.current_fps_index]}")
+
+    def apply_settings(self):
+        # Get selected resolution and FPS
+        new_width, new_height = self.resolution_options[self.current_res_index]
+        new_fps = self.fps_options[self.current_fps_index]
+
+        # Update config file
+        config = configparser.ConfigParser()
+        config_file = 'config.ini'
+        config.read(config_file)
+
+        config['CONFIG']['width'] = str(new_width)
+        config['CONFIG']['height'] = str(new_height)
+        config['CONFIG']['fps'] = str(new_fps)
+
+        with open(config_file, 'w') as f:
+            config.write(f)
+
+        # Inform user that restart is needed
+        if self.restart_notice:
+            self.restart_notice.hidden = False
+        else:
+            self.restart_notice = custom_text.Custom_text(
+                self,
+                self.game.width / 2,
+                self.game.height * 7 / 8,
+                "Settings saved. Restart game to apply changes.",
+                text_color='yellow',
+                font_height=20
+            )
+
+        # Reset the timer
+        self.notice_timer = 0
+        self.notice_visible = True
+
+    def go_back(self):
+        self.game.change_display('main_menu')
+
+    def mainloop(self):
+        # Handle notice fading
+        if self.notice_visible and self.restart_notice:
+            # Increment timer
+            self.notice_timer += self.game.delta_time
+
+            # Start fading after 3 seconds
+            if 3.0 <= self.notice_timer < 5.0:
+                # Create fading effect by creating a new text with decreasing alpha
+                fade_progress = (self.notice_timer - 3.0) / 2.0  # 0.0 to 1.0 over 2 seconds
+                alpha = int(255 * (1.0 - fade_progress))
+
+                # Update the notice color with decreasing alpha
+                yellow_with_alpha = (255, 255, 0, alpha)
+                self.restart_notice.text_color = yellow_with_alpha
+
+            # Hide notice after 5 seconds
+            elif self.notice_timer >= 5.0:
+                self.restart_notice.hidden = True
+                self.notice_visible = False

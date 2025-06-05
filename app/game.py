@@ -37,7 +37,8 @@ class Game:
         self.displays = {
             'template_display': display.basic_display(self),
             'game_display': display.game_display(self),
-            'main_menu': display.main_menu_display(self)
+            'main_menu': display.main_menu_display(self),
+            'options_display': display.options_display(self)
         }
         self.current_display = self.displays['main_menu']
 
