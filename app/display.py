@@ -34,6 +34,10 @@ class game_display(basic_display):
         basic_display.__init__(self, game)
 
 
+    def mainloop(self):
+        pass
+
+
 class main_menu_display(basic_display):
     def __init__(self, game):
         basic_display.__init__(self, game)
