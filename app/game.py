@@ -1,5 +1,5 @@
 import pygame
-from app import config, display
+from app import config, display, sounds
 from customObjects import custom_text, custom_images, custom_button
 
 class Game:
@@ -33,6 +33,10 @@ class Game:
         if self.fullscreen:
             pygame.display.toggle_fullscreen()
         pygame.display.set_caption(f"{self.title} (v {self.version})")
+
+        self.sound_manager = sounds.SoundManager(self)
+        self.sound_manager.load_music("background", "music/InTheBeninging.wav")
+        self.sound_manager.play_music("background")
 
         self.displays = {
             'template_display': display.basic_display(self),
@@ -68,6 +72,19 @@ class Game:
 
     def change_display(self, new_display):
         self.fade(fade_in=True)
+
+        # Stop music when leaving menu screens
+        music_screens = ['main_menu', 'options_display']
+        if self.current_display == self.displays['main_menu'] or self.current_display == self.displays[
+            'options_display']:
+            if new_display not in music_screens:
+                self.sound_manager.stop_music(fade_ms=500)
+
+        # Start music when entering menu screens
+        if new_display in music_screens:
+            if not pygame.mixer.music.get_busy():
+                self.sound_manager.play_music("background")
+
         self.current_display = self.displays[new_display]
         self.fade(fade_in=False)
 
