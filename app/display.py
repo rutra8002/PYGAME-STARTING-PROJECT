@@ -3,6 +3,7 @@ from particlesystem import particle_system, particle_generator
 import random
 import pygame
 import configparser
+from app import config as confige
 
 class basic_display:
     def __init__(self, game):
@@ -294,8 +295,20 @@ class options_display(basic_display):
         config['CONFIG']['height'] = str(new_height)
         config['CONFIG']['fps'] = str(new_fps)
 
+        self.game.width = new_width
+        self.game.height = new_height
+        self.game.fps = new_fps
+
+        self.game.screen = pygame.display.set_mode((self.game.width, self.game.height))
+        self.game.debug_items[2].update_text(f'FPS cap: {self.game.fps}')
+
+        confige.read_config()
+
         with open(config_file, 'w') as f:
             config.write(f)
+
+        for display in self.game.displays.values():
+            display.__init__(self.game)
 
 
     def go_back(self):
