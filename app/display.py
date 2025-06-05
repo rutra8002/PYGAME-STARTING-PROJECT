@@ -4,6 +4,7 @@ import random
 import pygame
 import configparser
 from app import config as confige
+from app import player
 
 class basic_display:
     def __init__(self, game):
@@ -32,10 +33,19 @@ class basic_display:
 class game_display(basic_display):
     def __init__(self, game):
         basic_display.__init__(self, game)
+        self.player = player.Player(self)
 
 
     def mainloop(self):
         pass
+
+    def render(self):
+        basic_display.render(self)
+        self.player.render()
+
+    def events(self, event):
+        basic_display.events(self, event)
+        self.player.events(event)
 
 
 class main_menu_display(basic_display):
