@@ -40,7 +40,7 @@ class main_menu_display(basic_display):
         self.particle_gen = particle_system.ParticleGenerator(
             self.particle_system,
             game.width / 2, game.height / 2,
-            0, -1, 0.5, 0.5, 0, 0, 70, 100, 5, 200, 200, 200, 200, "circle", False, 60)
+            0, -1, 0.5, 0.5, 0, 0, 20, 300, 2, 200, 200, 200, 150, "circle", False, 60)
         self.particle_system.add_generator(self.particle_gen)
         self.particle_gen.start()
 
