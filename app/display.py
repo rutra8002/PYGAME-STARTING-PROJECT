@@ -39,7 +39,7 @@ class main_menu_display(basic_display):
 
         self.particle_system = particle_system.ParticleSystem()
 
-        self.particle_gen = particle_system.ParticleGenerator(
+        self.particle_gen = particle_generator.ParticleGenerator(
             self.particle_system,
             game.width / 2, game.height / 2,
             0, -1, 0.5, 0.5, 0, 0, 20, 300, 2, 200, 200, 200, 150, "circle", False, 60)
@@ -137,12 +137,7 @@ class options_display(basic_display):
         )
 
         # Get available resolutions
-        self.available_resolutions = pygame.display.list_modes()
-        # Filter to common resolutions for better usability
-        self.common_resolutions = [(1280, 720), (1366, 768), (1600, 900), (1920, 1080)]
-        self.resolution_options = [res for res in self.common_resolutions if res in self.available_resolutions]
-        if not self.resolution_options:  # If no common resolutions found, use some from available ones
-            self.resolution_options = self.available_resolutions[:5]
+        self.resolution_options = pygame.display.list_modes()
 
         # Add current resolution if not in list
         current_res = (self.game.width, self.game.height)
@@ -261,9 +256,6 @@ class options_display(basic_display):
             text_color="white"
         )
 
-        self.restart_notice = None
-        self.notice_timer = 0
-        self.notice_visible = False
 
     def prev_resolution(self):
         self.current_res_index = (self.current_res_index - 1) % len(self.resolution_options)
@@ -305,43 +297,9 @@ class options_display(basic_display):
         with open(config_file, 'w') as f:
             config.write(f)
 
-        # Inform user that restart is needed
-        if self.restart_notice:
-            self.restart_notice.hidden = False
-        else:
-            self.restart_notice = custom_text.Custom_text(
-                self,
-                self.game.width / 2,
-                self.game.height * 7 / 8,
-                "Settings saved. Restart game to apply changes.",
-                text_color='yellow',
-                font_height=20
-            )
-
-        # Reset the timer
-        self.notice_timer = 0
-        self.notice_visible = True
 
     def go_back(self):
         self.game.change_display('main_menu')
 
     def mainloop(self):
-        # Handle notice fading
-        if self.notice_visible and self.restart_notice:
-            # Increment timer
-            self.notice_timer += self.game.delta_time
-
-            # Start fading after 3 seconds
-            if 3.0 <= self.notice_timer < 5.0:
-                # Create fading effect by creating a new text with decreasing alpha
-                fade_progress = (self.notice_timer - 3.0) / 2.0  # 0.0 to 1.0 over 2 seconds
-                alpha = int(255 * (1.0 - fade_progress))
-
-                # Update the notice color with decreasing alpha
-                yellow_with_alpha = (255, 255, 0, alpha)
-                self.restart_notice.text_color = yellow_with_alpha
-
-            # Hide notice after 5 seconds
-            elif self.notice_timer >= 5.0:
-                self.restart_notice.hidden = True
-                self.notice_visible = False
+        pass
