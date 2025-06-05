@@ -146,18 +146,17 @@ class options_display(basic_display):
             self.resolution_options.append(current_res)
 
         # Sort resolutions by size
-        self.resolution_options.sort(key=lambda x: x[0] * x[1])
+        self.resolution_options.reverse()
 
         # Find index of current resolution
         self.current_res_index = self.resolution_options.index(current_res)
 
         # Available FPS options
         self.fps_options = [30, 60, 90, 120, 144, 240]
-        self.current_fps = float(self.game.fps)
+        self.current_fps = self.game.fps
 
         # Find closest FPS option to current setting
-        self.current_fps_index = min(range(len(self.fps_options)),
-                                     key=lambda i: abs(self.fps_options[i] - self.current_fps))
+        self.current_fps_index = self.fps_options.index(self.current_fps)
 
         # Create UI elements
         button_width = 200
