@@ -5,6 +5,7 @@ import pygame
 import configparser
 from app import config as confige
 from app import player
+import math
 
 class basic_display:
     def __init__(self, game):
@@ -74,11 +75,12 @@ class main_menu_display(basic_display):
             font_height=80
         )
 
-        # Create buttons
-        button_width = 200
-        button_height = 60
+
+        # Create styled buttons with hover effects
+        button_width = 220
+        button_height = 70
         button_y_start = game.height / 2
-        button_spacing = 80
+        button_spacing = 100
 
         # Play button
         self.play_button = custom_button.Button(
@@ -88,9 +90,11 @@ class main_menu_display(basic_display):
             button_y_start,
             button_width,
             button_height,
-            color=(100, 200, 100),
-            text="Play",
-            text_color="white"
+            color=(40, 120, 40),
+            text="PLAY",
+            text_color="white",
+            outline_color=(100, 255, 100),
+            outline_width=3
         )
 
         # Options button
@@ -101,9 +105,11 @@ class main_menu_display(basic_display):
             button_y_start + button_spacing,
             button_width,
             button_height,
-            color=(100, 100, 200),
-            text="Options",
-            text_color="white"
+            color=(40, 40, 120),
+            text="OPTIONS",
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         # Exit button
@@ -114,9 +120,22 @@ class main_menu_display(basic_display):
             button_y_start + button_spacing * 2,
             button_width,
             button_height,
-            color=(200, 100, 100),
-            text="Exit",
-            text_color="white"
+            color=(120, 40, 40),
+            text="EXIT",
+            text_color="white",
+            outline_color=(255, 100, 100),
+            outline_width=3
+        )
+
+        # Version text at bottom
+        self.version_text = custom_text.Custom_text(
+            self,
+            game.width - 50,
+            game.height - 20,
+            f"v{game.version}",
+            text_color=(150, 150, 150),
+            font_height=20,
+            center=False
         )
 
     def play_game(self):
