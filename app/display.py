@@ -47,6 +47,9 @@ class game_display(basic_display):
         basic_display.events(self, event)
         self.player.events(event)
 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.game.change_display('pause_menu')
+
 
 class main_menu_display(basic_display):
     def __init__(self, game):
@@ -120,6 +123,7 @@ class main_menu_display(basic_display):
         self.game.change_display('game_display')
 
     def open_options(self):
+        self.game.displays['options_display'].from_pause = False
         self.game.change_display('options_display')
 
     def exit_game(self):
@@ -140,7 +144,7 @@ class main_menu_display(basic_display):
 class options_display(basic_display):
     def __init__(self, game):
         basic_display.__init__(self, game)
-
+        self.from_pause = False
         self.game = game
         self.title = custom_text.Custom_text(
             self,
@@ -323,8 +327,95 @@ class options_display(basic_display):
         for display in self.game.displays.values():
             display.__init__(self.game)
 
-
     def go_back(self):
+        if self.from_pause:
+            self.game.change_display('pause_menu')
+        else:
+            self.game.change_display('main_menu')
+
+    def mainloop(self):
+        pass
+
+
+class pause_menu_display(basic_display):
+    def __init__(self, game):
+        basic_display.__init__(self, game)
+
+        # Create semi-transparent overlay
+        self.overlay = pygame.Surface((game.width, game.height), pygame.SRCALPHA)
+        self.overlay.fill((0, 0, 0, 128))  # Black with 50% opacity
+
+        # Create title
+        self.title = custom_text.Custom_text(
+            self,
+            game.width / 2,
+            game.height / 4,
+            "Paused",
+            text_color='white',
+            font_height=60
+        )
+
+        # Create buttons
+        button_width = 200
+        button_height = 60
+        button_y_start = game.height / 2
+        button_spacing = 80
+
+        # Resume button
+        self.resume_button = custom_button.Button(
+            self,
+            self.resume_game,
+            game.width / 2 - button_width / 2,
+            button_y_start,
+            button_width,
+            button_height,
+            color=(100, 200, 100),
+            text="Resume",
+            text_color="white"
+        )
+
+        # Options button
+        self.options_button = custom_button.Button(
+            self,
+            self.open_options,
+            game.width / 2 - button_width / 2,
+            button_y_start + button_spacing,
+            button_width,
+            button_height,
+            color=(100, 100, 200),
+            text="Options",
+            text_color="white"
+        )
+
+        # Main menu button
+        self.main_menu_button = custom_button.Button(
+            self,
+            self.go_to_main_menu,
+            game.width / 2 - button_width / 2,
+            button_y_start + button_spacing * 2,
+            button_width,
+            button_height,
+            color=(200, 100, 100),
+            text="Main Menu",
+            text_color="white"
+        )
+
+    def render(self):
+        self.game.displays['game_display'].render()
+
+        self.game.screen.blit(self.overlay, (0, 0))
+
+        for obj in self.objects:
+            obj.render()
+
+    def resume_game(self):
+        self.game.change_display('game_display')
+
+    def open_options(self):
+        self.game.displays['options_display'].from_pause = True
+        self.game.change_display('options_display')
+
+    def go_to_main_menu(self):
         self.game.change_display('main_menu')
 
     def mainloop(self):
