@@ -216,9 +216,11 @@ class options_display(basic_display):
             game.height / 3 - button_height/2,
             50,
             button_height,
-            color=(80, 80, 180),
+            color=(40, 40, 120),
             text="<",
-            text_color="white"
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         self.res_right_button = custom_button.Button(
@@ -228,9 +230,11 @@ class options_display(basic_display):
             game.height / 3 - button_height/2,
             50,
             button_height,
-            color=(80, 80, 180),
+            color=(40, 40, 120),
             text=">",
-            text_color="white"
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         # FPS section
@@ -250,9 +254,11 @@ class options_display(basic_display):
             game.height / 2 - button_height/2,
             50,
             button_height,
-            color=(80, 80, 180),
+            color=(40, 40, 120),
             text="<",
-            text_color="white"
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         self.fps_right_button = custom_button.Button(
@@ -262,9 +268,11 @@ class options_display(basic_display):
             game.height / 2 - button_height/2,
             50,
             button_height,
-            color=(80, 80, 180),
+            color=(40, 40, 120),
             text=">",
-            text_color="white"
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         # Apply button
@@ -275,9 +283,11 @@ class options_display(basic_display):
             game.height * 3 / 4,
             button_width,
             button_height,
-            color=(100, 200, 100),
-            text="Apply",
-            text_color="white"
+            color=(40, 120, 40),
+            text="APPLY",
+            text_color="white",
+            outline_color=(100, 255, 100),
+            outline_width=3
         )
 
         # Back button
@@ -288,9 +298,11 @@ class options_display(basic_display):
             game.height * 3 / 4 + 70,
             button_width,
             button_height,
-            color=(200, 100, 100),
-            text="Back",
-            text_color="white"
+            color=(120, 40, 40),
+            text="BACK",
+            text_color="white",
+            outline_color=(255, 100, 100),
+            outline_width=3
         )
 
 
@@ -388,9 +400,11 @@ class pause_menu_display(basic_display):
             button_y_start,
             button_width,
             button_height,
-            color=(100, 200, 100),
-            text="Resume",
-            text_color="white"
+            color=(40, 120, 40),
+            text="RESUME",
+            text_color="white",
+            outline_color=(100, 255, 100),
+            outline_width=3
         )
 
         # Options button
@@ -401,9 +415,11 @@ class pause_menu_display(basic_display):
             button_y_start + button_spacing,
             button_width,
             button_height,
-            color=(100, 100, 200),
-            text="Options",
-            text_color="white"
+            color=(40, 40, 120),
+            text="OPTIONS",
+            text_color="white",
+            outline_color=(100, 100, 255),
+            outline_width=3
         )
 
         # Main menu button
@@ -414,9 +430,11 @@ class pause_menu_display(basic_display):
             button_y_start + button_spacing * 2,
             button_width,
             button_height,
-            color=(200, 100, 100),
-            text="Main Menu",
-            text_color="white"
+            color=(120, 40, 40),
+            text="MAIN MENU",
+            text_color="white",
+            outline_color=(255, 100, 100),
+            outline_width=3
         )
 
     def render(self):
